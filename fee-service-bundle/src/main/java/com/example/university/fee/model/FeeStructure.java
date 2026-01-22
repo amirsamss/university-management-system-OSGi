@@ -66,7 +66,8 @@ public class FeeStructure {
 
     public BigDecimal getTotalFixedFees() {
         return feeItems.stream()
-                .filter(item -> item.getFeeType() == FeeItemType.FIXED)
+                // 👇 FIXED: Added "FeeItem." before FeeItemType
+                .filter(item -> item.getFeeType() == FeeItem.FeeItemType.FIXED)
                 .map(FeeItem::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
