@@ -5,7 +5,7 @@
              https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
     <persistence-unit name="fee-service-pu" transaction-type="JTA">
-        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=universityFeeDS)</jta-data-source>
+        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=universityDS)</jta-data-source>
         
         <!-- Entity Classes -->
         <class>com.example.university.fee.model.Payment</class>
