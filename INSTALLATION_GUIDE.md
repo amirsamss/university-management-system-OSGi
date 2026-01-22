@@ -25,7 +25,7 @@ This guide provides step-by-step instructions for installing and running the Fee
 4. **PostgreSQL Database**
    - Version: 12 or higher
    - Download: [PostgreSQL](https://www.postgresql.org/download/)
-   - Create a database named `university_fee_db`
+   - Create a database named `university_management_db` (shared database for all modules)
 
 ### Required OSGi Bundles
 
@@ -107,6 +107,8 @@ feature:install jdbc
 
 ### Step 5: Configure Database Connection
 
+**Note**: This is a shared database configuration for all university management system modules. If another module has already configured this datasource, you can skip this step.
+
 1. Create a datasource configuration file:
    ```bash
    # In Karaf, create/edit etc/org.ops4j.datasource-university.cfg
@@ -115,11 +117,13 @@ feature:install jdbc
 2. Add the following configuration:
    ```properties
    osgi.jdbc.driver.name=PostgreSQL
-   url=jdbc:postgresql://localhost:5432/university_fee_db
+   url=jdbc:postgresql://localhost:5432/university_management_db
    user=your_username
    password=your_password
-   dataSourceName=universityFeeDS
+   dataSourceName=universityDS
    ```
+   
+   **Important**: The `dataSourceName=universityDS` should be consistent across all modules to share the same database connection.
 
 3. Reload the configuration:
    ```karaf
@@ -169,12 +173,17 @@ feature:install jdbc
 
 ### Database Schema
 
+**Note**: This is a shared database (`university_management_db`) for all university management system modules. Each module will create its own tables in this database.
+
 Create the required database tables. You can use the following SQL script as a reference:
 
 ```sql
--- Create tables based on JPA entities
--- Payment, Invoice, FeeStructure, FeeItem, FinancialAid, AccountStatement, Refund
--- (Tables will be auto-created if JPA is configured with hibernate.hbm2ddl.auto=create)
+-- Shared database: university_management_db
+-- Fee Service Module tables:
+-- Payment, Invoice, InvoiceLineItem, FeeStructure, FeeItem, FinancialAid, AccountStatement, Refund
+-- (Tables will be auto-created if JPA is configured with jakarta.persistence.schema-generation.database.action=create)
+-- 
+-- Other modules (student-service, course-service, etc.) will also create their tables in this same database
 ```
 
 ### JPA Persistence Configuration
@@ -188,7 +197,7 @@ Create `META-INF/persistence.xml` in your bundle or configure via OSGi Config Ad
              http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
     <persistence-unit name="fee-service-pu" transaction-type="JTA">
-        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=universityFeeDS)</jta-data-source>
+        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=universityDS)</jta-data-source>
         <class>com.example.university.fee.model.Payment</class>
         <class>com.example.university.fee.model.Invoice</class>
         <class>com.example.university.fee.model.FeeStructure</class>
@@ -244,7 +253,7 @@ Create `META-INF/persistence.xml` in your bundle or configure via OSGi Config Ad
 
 1. Test database connection:
    ```karaf
-   jdbc:query universityFeeDS "SELECT 1"
+   jdbc:query universityDS "SELECT 1"
    ```
 
 2. Verify datasource configuration:
