@@ -6,8 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Bundle Activator for Fee Service Bundle
- * Manages the lifecycle of the OSGi bundle
+ * Fee Service Bundle Activator
  */
 public class Activator implements BundleActivator {
 

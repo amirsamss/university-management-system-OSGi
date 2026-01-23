@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Invoice Entity - Student billing invoice
- * UC-24: Generate Invoices, UC-25: Calculate Tuition
+ * Invoice Entity
  */
 @Entity
 @Table(name = "invoices")
@@ -120,7 +119,6 @@ public class Invoice {
         calculateOutstandingBalance();
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getInvoiceNumber() { return invoiceNumber; }

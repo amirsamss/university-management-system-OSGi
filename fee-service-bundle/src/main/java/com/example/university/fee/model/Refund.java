@@ -5,8 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Refund Entity - Process refunds for overpayments or withdrawals
- * UC-28: Process Refund
+ * Refund Entity
  */
 @Entity
 @Table(name = "refunds")
@@ -74,7 +73,6 @@ public class Refund {
         updatedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getStudentId() { return studentId; }

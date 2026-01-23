@@ -5,8 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * FinancialAid Entity - Scholarships, grants, and waivers
- * UC-26: Manage Financial Aid
+ * Financial Aid Entity
  */
 @Entity
 @Table(name = "financial_aids")
@@ -86,7 +85,6 @@ public class FinancialAid {
         updatedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getStudentId() { return studentId; }

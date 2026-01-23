@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * FeeItem Entity - Individual fee items within a fee structure
- * UC-23: Configure Tuition Fee
+ * Fee Item Entity
  */
 @Entity
 @Table(name = "fee_items")
@@ -38,7 +37,6 @@ public class FeeItem {
     @Column(name = "refundable")
     private Boolean refundable = false;
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public FeeStructure getFeeStructure() { return feeStructure; }

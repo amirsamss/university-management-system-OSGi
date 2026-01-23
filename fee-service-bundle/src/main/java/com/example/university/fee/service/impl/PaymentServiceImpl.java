@@ -13,8 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Payment Service Implementation using OSGi Declarative Services
- * UC-27: Track Payments & Outstanding Fees
+ * Payment Service Implementation
  */
 @Component(service = PaymentService.class, immediate = true)
 public class PaymentServiceImpl implements PaymentService {

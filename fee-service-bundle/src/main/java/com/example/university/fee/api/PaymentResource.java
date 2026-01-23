@@ -1,5 +1,4 @@
 package com.example.university.fee.api;
-
 import com.example.university.fee.model.Payment;
 import com.example.university.fee.service.PaymentService;
 import jakarta.ws.rs.*;
@@ -9,16 +8,13 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * REST API Resource for Payment management
- * UC-27: Track Payments & Outstanding Fees
- * Uses JAX-RS Whiteboard pattern for OSGi
+ * Payment REST API Resource
  */
 @Component(service = Object.class, property = {
     "service.exported.interfaces=*",
@@ -39,10 +35,6 @@ public class PaymentResource {
         this.paymentService = paymentService;
     }
 
-    /**
-     * Record a payment
-     * POST /api/payments
-     */
     @POST
     public Response recordPayment(Payment payment) {
         logger.info("POST /api/payments - Recording payment for student: {}", payment.getStudentId());
@@ -60,10 +52,6 @@ public class PaymentResource {
         }
     }
 
-    /**
-     * Get payment by ID
-     * GET /api/payments/{id}
-     */
     @GET
     @Path("/{id}")
     public Response getPaymentById(@PathParam("id") Long id) {
@@ -79,10 +67,6 @@ public class PaymentResource {
         return Response.ok(response).build();
     }
 
-    /**
-     * Get payments by student
-     * GET /api/payments/student/{studentId}
-     */
     @GET
     @Path("/student/{studentId}")
     public Response getPaymentsByStudent(@PathParam("studentId") String studentId) {
@@ -94,10 +78,6 @@ public class PaymentResource {
         return Response.ok(response).build();
     }
 
-    /**
-     * Get payments by date range
-     * GET /api/payments/date-range?startDate=...&endDate=...
-     */
     @GET
     @Path("/date-range")
     public Response getPaymentsByDateRange(

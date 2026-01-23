@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * InvoiceLineItem Entity - Individual line items on an invoice
- * UC-24: Generate Invoices
+ * Invoice Line Item Entity
  */
 @Entity
 @Table(name = "invoice_line_items")
@@ -35,7 +34,6 @@ public class InvoiceLineItem {
     @Column(name = "unit_price", precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Invoice getInvoice() { return invoice; }

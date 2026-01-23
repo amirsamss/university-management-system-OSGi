@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * FeeStructure Entity - Defines tuition fee configuration
- * UC-23: Configure Tuition Fee
+ * Fee Structure Entity
  */
 @Entity
 @Table(name = "fee_structures", uniqueConstraints = {
@@ -66,13 +65,11 @@ public class FeeStructure {
 
     public BigDecimal getTotalFixedFees() {
         return feeItems.stream()
-                // 👇 FIXED: Added "FeeItem." before FeeItemType
                 .filter(item -> item.getFeeType() == FeeItem.FeeItemType.FIXED)
                 .map(FeeItem::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getAcademicYear() { return academicYear; }
