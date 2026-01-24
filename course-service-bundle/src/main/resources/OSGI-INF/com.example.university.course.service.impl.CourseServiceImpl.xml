@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.4.0"
+    name="CourseServiceImpl"
+    activate="activate"
+    deactivate="deactivate">
+    <implementation class="com.example.university.course.service.impl.CourseServiceImpl"/>
+    <service>
+        <provide interface="com.example.university.course.service.CourseService"/>
+    </service>
+    <reference bind="setEntityManager" name="entityManager"
+        interface="jakarta.persistence.EntityManager"
+        cardinality="1..1" policy="static" unbind="unsetEntityManager"/>
+</scr:component>
