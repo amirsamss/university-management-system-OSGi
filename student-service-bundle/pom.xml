@@ -1,73 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>com.example.university</groupId>
         <artifactId>university-management-system-osgi</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>course-service-bundle</artifactId>
+    <artifactId>student-service-bundle</artifactId>
     <packaging>bundle</packaging>
-    <name>Course Management OSGi Bundle - UC5 to UC8</name>
-    <description>Course catalog management, enrollment, timetable, and prerequisites - UC5 to UC8</description>
+
+    <name>Student Service Bundle</name>
+    <description>Student Management OSGi Bundle - Student records, academic profiles, disciplinary records, and enrollments</description>
 
     <dependencies>
-        <!-- OSGi -->
+        <!-- OSGi Core -->
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
         </dependency>
-
-        <!-- Declarative Services -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.annotation</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.service.component.annotations</artifactId>
-            <version>1.5.0</version>
-            <scope>provided</scope>
         </dependency>
 
-        <!-- JAX-RS -->
+        <!-- JAX-RS for REST API -->
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>${jaxrs.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- JPA -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
-            <version>${jpa.version}</version>
-            <scope>provided</scope>
         </dependency>
 
-        <!-- Transactions -->
-        <dependency>
-            <groupId>jakarta.transaction</groupId>
-            <artifactId>jakarta.transaction-api</artifactId>
-            <version>2.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- PostgreSQL JDBC -->
+        <!-- PostgreSQL Driver -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
-            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -81,18 +88,19 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
-                        <Bundle-Activator>com.example.university.course.Activator</Bundle-Activator>
+                        <Bundle-Activator>com.example.university.student.Activator</Bundle-Activator>
                         <Export-Package>
-                            com.example.university.course.api,
-                            com.example.university.course.model,
-                            com.example.university.course.service
+                            com.example.university.student.api,
+                            com.example.university.student.model,
+                            com.example.university.student.service
                         </Export-Package>
                         <Import-Package>
-                            !jakarta.ws.rs,!jakarta.persistence,!org.osgi.framework,!org.osgi.service.component.annotations,*,
                             jakarta.ws.rs;version="[3.0,4)",
                             jakarta.persistence;version="[3.1,4)",
                             org.osgi.framework;version="[1.10,2)",
-                            org.osgi.service.component.annotations;version="[1.5,2)"
+                            org.osgi.service.component.annotations;version="[1.5,2)",
+                            org.slf4j.*,
+                            *
                         </Import-Package>
                         <Service-Component>OSGI-INF/*.xml</Service-Component>
                     </instructions>
@@ -101,6 +109,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
