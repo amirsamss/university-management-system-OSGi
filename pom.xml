@@ -23,6 +23,7 @@
         <jpa.version>3.1.0</jpa.version>
         <postgresql.version>42.7.1</postgresql.version>
         <slf4j.version>1.7.36</slf4j.version>
+        <cxf.version>3.6.0</cxf.version>
         <pax-jdbc.version>1.5.0</pax-jdbc.version>
         <maven-bundle-plugin.version>5.1.8</maven-bundle-plugin.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
@@ -33,6 +34,7 @@
         <module>university-management-api</module>
         <module>university-management-whiteboard</module>
         <module>university-management-features</module>
+        <!-- Old bundles kept for reference -->
         <module>fee-service-bundle</module>
         <module>exam-service-bundle</module>
         <module>course-service-bundle</module>
@@ -91,6 +93,7 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.36</version>
             </dependency>
+
             <!-- Apache CXF for JAX-RS -->
             <dependency>
                 <groupId>org.apache.cxf</groupId>
@@ -98,6 +101,22 @@
                 <version>${cxf.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
+            <!-- Pax JDBC for Database Integration -->
+            <dependency>
+                <groupId>org.ops4j.pax.jdbc</groupId>
+                <artifactId>pax-jdbc-postgresql</artifactId>
+                <version>${pax-jdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jdbc</groupId>
+                <artifactId>pax-jdbc-config</artifactId>
+                <version>${pax-jdbc.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -119,6 +138,7 @@
                         <target>17</target>
                     </configuration>
                 </plugin>
+                <plugin>
                     <groupId>org.apache.karaf.tooling</groupId>
                     <artifactId>karaf-maven-plugin</artifactId>
                     <version>${karaf.version}</version>
