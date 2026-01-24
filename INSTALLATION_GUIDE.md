@@ -23,9 +23,22 @@ This guide provides step-by-step instructions for installing and running the Fee
    - Extract to a directory (e.g., `C:\karaf` or `/opt/karaf`)
 
 4. **PostgreSQL Database**
+<<<<<<< Updated upstream
    - Version: 12 or higher
    - Download: [PostgreSQL](https://www.postgresql.org/download/)
    - Create a database named `university_management_db` (shared database for all modules)
+=======
+   - **Option A: Local PostgreSQL**
+     - Version: 12 or higher
+     - Download: [PostgreSQL](https://www.postgresql.org/download/)
+     - Create a database named `university_management_db`
+   
+   - **Option B: Supabase (Cloud PostgreSQL)** - **Recommended for Teams**
+     - Sign up at [Supabase](https://supabase.com/)
+     - Create a new project
+     - Note your connection details from Project Settings > Database
+     - **See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for detailed team setup instructions**
+>>>>>>> Stashed changes
 
 ### Required OSGi Bundles
 
@@ -95,7 +108,75 @@ feature:install jdbc
    - Download from: [PostgreSQL JDBC Driver](https://jdbc.postgresql.org/download/)
    - Version: 42.7.1 or compatible
 
+<<<<<<< Updated upstream
 2. Install the driver in Karaf:
+=======
+```karaf
+# Create datasource configuration
+config:edit org.ops4j.datasource-university
+config:property-set osgi.jdbc.driver.name "PostgreSQL JDBC Driver"
+config:property-set url jdbc:postgresql://localhost:5432/university_management_db
+config:property-set user postgres
+config:property-set password your_password
+config:property-set dataSourceName universityDS
+config:update
+```
+
+#### For Supabase:
+
+```karaf
+# Create datasource configuration
+config:edit org.ops4j.datasource-university
+config:property-set osgi.jdbc.driver.name "PostgreSQL JDBC Driver"
+config:property-set url jdbc:postgresql://db.xxxxx.supabase.co:5432/postgres
+config:property-set user postgres
+config:property-set password your_supabase_password
+config:property-set dataSourceName universityDS
+config:update
+```
+
+**Important Notes:**
+- Replace `your_password` with your actual database password
+- Replace `db.xxxxx.supabase.co` with your Supabase host (if using Supabase)
+- The `dataSourceName=universityDS` must match across all configurations
+
+### Step 7: Verify Database Connection
+
+```karaf
+# List all datasources
+jdbc:ds-list
+
+# Test database connection
+jdbc:query universityDS "SELECT 1"
+
+# If successful, you should see:
+# +---+
+# | 1 |
+# +---+
+# | 1 |
+# +---+
+```
+
+### Step 8: Install University Management System
+
+```karaf
+# Add feature repository
+feature:repo-add mvn:com.example.university/university-management-features/1.0.0-SNAPSHOT/xml/features
+
+# Install the complete system
+feature:install university-management
+```
+
+This single command installs:
+- `university-management-api` bundle
+- `university-management-whiteboard` bundle
+- All REST services (Exam, Fee, Course)
+- All service implementations
+
+### Step 9: Verify Installation
+
+1. **Check bundle status**:
+>>>>>>> Stashed changes
    ```karaf
    bundle:install file:///path/to/postgresql-42.7.1.jar
    ```

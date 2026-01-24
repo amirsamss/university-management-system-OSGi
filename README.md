@@ -144,7 +144,13 @@ See [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md) for troubleshooting steps.
 
 ## Documentation
 
+<<<<<<< Updated upstream
 - [Installation Guide](INSTALLATION_GUIDE.md) - Detailed installation and configuration instructions
+=======
+- [Quick Start Guide](QUICKSTART.md) - Quick setup instructions for getting started
+- [Installation Guide](INSTALLATION_GUIDE.md) - Comprehensive installation and configuration instructions
+- [Supabase Setup Guide](SUPABASE_SETUP.md) - Team setup guide for Supabase PostgreSQL database
+>>>>>>> Stashed changes
 
 ## License
 

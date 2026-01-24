@@ -1,6 +1,7 @@
 package com.example.university.fee.model;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +14,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = "invoices")
-public class Invoice {
+public class Invoice implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
