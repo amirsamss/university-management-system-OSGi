@@ -22,6 +22,7 @@
         <jaxrs.version>3.0.0</jaxrs.version>
         <jpa.version>3.1.0</jpa.version>
         <postgresql.version>42.7.1</postgresql.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <maven-bundle-plugin.version>5.1.8</maven-bundle-plugin.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
     </properties>
@@ -29,6 +30,7 @@
     <modules>
         <module>fee-service-bundle</module>
         <module>exam-service-bundle</module>
+        <module>course-service-bundle</module>
     </modules>
 
     <dependencyManagement>
