@@ -23,11 +23,16 @@
         <jpa.version>3.1.0</jpa.version>
         <postgresql.version>42.7.1</postgresql.version>
         <slf4j.version>1.7.36</slf4j.version>
+        <pax-jdbc.version>1.5.0</pax-jdbc.version>
         <maven-bundle-plugin.version>5.1.8</maven-bundle-plugin.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
     </properties>
 
     <modules>
+        <!-- New modular structure -->
+        <module>university-management-api</module>
+        <module>university-management-whiteboard</module>
+        <module>university-management-features</module>
         <module>fee-service-bundle</module>
         <module>exam-service-bundle</module>
         <module>course-service-bundle</module>
@@ -86,6 +91,13 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.36</version>
             </dependency>
+            <!-- Apache CXF for JAX-RS -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-service-description</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -106,6 +118,11 @@
                         <source>17</source>
                         <target>17</target>
                     </configuration>
+                </plugin>
+                    <groupId>org.apache.karaf.tooling</groupId>
+                    <artifactId>karaf-maven-plugin</artifactId>
+                    <version>${karaf.version}</version>
+                    <extensions>true</extensions>
                 </plugin>
             </plugins>
         </pluginManagement>

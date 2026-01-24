@@ -4,5 +4,5 @@
    <service>
       <provide interface="com.example.university.fee.service.PaymentService"/>
    </service>
-   <reference bind="setEntityManager" interface="jakarta.persistence.EntityManager" name="EntityManager" policy="static"/>
+   <reference bind="setEntityManager" interface="jakarta.persistence.EntityManager" name="EntityManager" policy="static" cardinality="0..1"/>
 </scr:component>

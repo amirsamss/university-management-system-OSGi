@@ -80,7 +80,7 @@ public class ExamResource {
 
     @GET
     @Path("/transcript/{studentId}")
-    @Produces(MediaType.TEXT_PLAIN) // 👈 Note: Plain text for the transcript report
+    @Produces(MediaType.TEXT_PLAIN)
     public Response getTranscript(@PathParam("studentId") String studentId) {
         String report = gradingService.generateTranscript(studentId);
         return Response.ok(report).build();

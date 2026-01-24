@@ -18,41 +18,48 @@ This project implements the Fee & Billing Management Module (UC-23 to UC-29) as 
 
 ```
 university-management-system-OSGi/
-├── fee-service-bundle/          # Fee Service OSGi Bundle
-│   ├── src/main/java/
-│   │   └── com/example/university/fee/
-│   │       ├── Activator.java           # Bundle activator
-│   │       ├── model/                   # JPA entities
-│   │       │   ├── Payment.java
-│   │       │   ├── Invoice.java
-│   │       │   ├── FeeStructure.java
-│   │       │   ├── FeeItem.java
-│   │       │   ├── FinancialAid.java
-│   │       │   ├── AccountStatement.java
-│   │       │   └── Refund.java
-│   │       ├── service/                 # Service interfaces
-│   │       │   └── PaymentService.java
-│   │       ├── service/impl/           # Service implementations
-│   │       │   └── PaymentServiceImpl.java
-│   │       └── api/                    # REST API resources
-│   │           └── PaymentResource.java
-│   └── src/main/resources/
-│       ├── OSGI-INF/                    # OSGi service components
-│       └── META-INF/
-│           └── persistence.xml          # JPA configuration
+├── university-management-api/          # Shared POJOs and interfaces
+│   ├── exam/ (Exam, Grade, GradingService)
+│   ├── fee/ (Payment, Invoice, PaymentService)
+│   └── course/ (Course, Enrollment, CourseService)
+│
+├── university-management-whiteboard/   # REST APIs and implementations
+│   ├── exam/ (ExamResource, GradingServiceImpl)
+│   ├── fee/ (PaymentResource, PaymentServiceImpl)
+│   └── course/ (CourseResource, CourseServiceImpl)
+│
+├── university-management-features/     # Karaf feature repository
+│
+├── [Old bundles kept for reference]
+│   ├── exam-service-bundle/
+│   ├── fee-service-bundle/
+│   └── course-service-bundle/
+│
 ├── pom.xml                              # Parent POM
-└── INSTALLATION_GUIDE.md                # Installation instructions
+├── QUICKSTART.md                        # Quick start guide
+└── INSTALLATION_GUIDE.md                # Detailed installation guide
 ```
 
-## Use Cases Implemented
+## Services Implemented
 
-- **UC-23**: Configure Tuition Fee
-- **UC-24**: Generate Invoices
-- **UC-25**: Calculate Tuition
-- **UC-26**: Manage Financial Aid
-- **UC-27**: Track Payments & Outstanding Fees
-- **UC-28**: Process Refund
-- **UC-29**: View Account Statements
+### Exam Service
+- Exam scheduling
+- Grade submission
+- GPA calculation
+- Transcript generation
+
+### Fee Service
+- Payment processing
+- Invoice management
+- Financial aid management
+- Account statements
+- Refund processing
+
+### Course Service
+- Course catalog management
+- Student enrollment
+- Course timetable
+- Prerequisite validation
 
 ## Features
 
@@ -63,34 +70,42 @@ university-management-system-OSGi/
 
 ## Quick Start
 
-1. **Prerequisites**: JDK 17+, Maven 3.8+, Apache Karaf 4.4.8, PostgreSQL 12+
+For a quick setup guide, see [QUICKSTART.md](QUICKSTART.md).
 
-2. **Build the bundle**:
-   ```bash
-   mvn clean install
-   ```
+For detailed installation and configuration instructions, see [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md).
 
-3. **Install in Karaf**:
-   ```bash
-   bundle:install file:///path/to/fee-service-bundle-1.0.0-SNAPSHOT.jar
-   bundle:start <bundle-id>
-   ```
+### Quick Commands
 
-4. **Access REST API**:
-   ```bash
-   curl http://localhost:8181/api/payments
-   ```
+```bash
+# Build all bundles
+mvn clean install
 
-For detailed installation instructions, see [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md).
+# In Karaf console:
+feature:repo-add mvn:com.example.university/university-management-features/1.0.0-SNAPSHOT/xml/features
+feature:install university-management
+```
 
 ## API Endpoints
 
-### Payment Management (UC-27)
+### Exam Service
+- `POST /api/exam/schedule` - Schedule an exam
+- `GET /api/exam/all-exams` - Get all exams
+- `POST /api/exam/submit-grade` - Submit a grade
+- `GET /api/exam/gpa/{studentId}` - Get GPA
+- `GET /api/exam/transcript/{studentId}` - Get transcript
 
+### Fee Service
 - `POST /api/payments` - Record a payment
 - `GET /api/payments/{id}` - Get payment by ID
 - `GET /api/payments/student/{studentId}` - Get payments by student
 - `GET /api/payments/date-range?startDate=...&endDate=...` - Get payments by date range
+
+### Course Service
+- `GET /api/courses` - Get all courses
+- `POST /api/courses` - Add a course
+- `POST /api/courses/enrollments` - Enroll a student
+- `GET /api/courses/{courseId}/schedules` - Get course schedules
+- `GET /api/courses/validate-prerequisites/{studentId}/{courseId}` - Validate prerequisites
 
 Base URL: `http://localhost:8181` (default Karaf HTTP port)
 
@@ -144,7 +159,8 @@ See [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md) for troubleshooting steps.
 
 ## Documentation
 
-- [Installation Guide](INSTALLATION_GUIDE.md) - Detailed installation and configuration instructions
+- [Quick Start Guide](QUICKSTART.md) - Quick setup instructions for getting started
+- [Installation Guide](INSTALLATION_GUIDE.md) - Comprehensive installation and configuration instructions
 
 ## License
 

@@ -19,6 +19,11 @@ import java.util.Map;
 @Path("/api/payments")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Component(service = Object.class, property = {
+    "service.exported.interfaces=*",
+    "service.exported.configs=org.apache.cxf.rs",
+    "cxf.jaxrs.address=/api/payments"
+})
 public class PaymentResource {
 
     private static final Logger logger = LoggerFactory.getLogger(PaymentResource.class);

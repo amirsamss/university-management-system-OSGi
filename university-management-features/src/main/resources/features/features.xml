@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="university-management-features" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
+    
+    <feature name="university-management-api" version="${project.version}">
+        <bundle>mvn:com.example.university/university-management-api/${project.version}</bundle>
+    </feature>
+    
+    <feature name="university-management-whiteboard" version="${project.version}">
+        <feature>university-management-api</feature>
+        <bundle>mvn:com.example.university/university-management-whiteboard/${project.version}</bundle>
+    </feature>
+    
+    <feature name="university-management" version="${project.version}">
+        <feature>university-management-whiteboard</feature>
+    </feature>
+    
+</features>

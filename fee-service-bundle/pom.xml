@@ -73,12 +73,14 @@
                             com.example.university.fee.model,
                             com.example.university.fee.service
                         </Export-Package>
+                        <Embed-Dependency>
+                            jakarta.persistence-api;scope=compile;inline=true,
+                            org.osgi.service.component.annotations;scope=compile;inline=true
+                        </Embed-Dependency>
                         <Import-Package>
                             !jakarta.ws.rs,!jakarta.persistence,!org.osgi.framework,!org.osgi.service.component.annotations,*,
                             jakarta.ws.rs;version="[3.0,4)",
-                            jakarta.persistence;version="[3.1,4)",
-                            org.osgi.framework;version="[1.10,2)",
-                            org.osgi.service.component.annotations;version="[1.5,2)"
+                            org.osgi.framework;version="[1.10,2)"
                         </Import-Package>
                         <Service-Component>OSGI-INF/*.xml</Service-Component>
                     </instructions>

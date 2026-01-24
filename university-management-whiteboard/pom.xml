@@ -11,13 +11,21 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>exam-service-bundle</artifactId>
+    <artifactId>university-management-whiteboard</artifactId>
     <packaging>bundle</packaging>
 
-    <name>Exam Service Bundle</name>
-    <description>Examination and Grading Management OSGi Bundle</description>
+    <name>University Management Whiteboard</name>
+    <description>REST implementations and service implementations bundle</description>
 
     <dependencies>
+        <!-- API Bundle -->
+        <dependency>
+            <groupId>com.example.university</groupId>
+            <artifactId>university-management-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- OSGi Core -->
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
@@ -31,21 +39,19 @@
             <artifactId>org.osgi.service.component.annotations</artifactId>
         </dependency>
 
+        <!-- JAX-RS for REST API -->
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
         </dependency>
 
+        <!-- JPA -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
+        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -62,22 +68,19 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
-                        <Bundle-Activator>com.example.university.exam.Activator</Bundle-Activator>
-                        
-                        <Export-Package>
-                            com.example.university.exam.api,
-                            com.example.university.exam.model,
-                            com.example.university.exam.service
-                        </Export-Package>
-                        
-                        <Embed-Dependency>
-                            jakarta.persistence-api;scope=compile;inline=true,
-                            org.osgi.service.component.annotations;scope=compile;inline=true
-                        </Embed-Dependency>
                         <Import-Package>
-                            !jakarta.ws.rs,!jakarta.persistence,!org.osgi.framework,!org.osgi.service.component.annotations,*,
+                            com.example.university.exam.model,
+                            com.example.university.exam.service,
+                            com.example.university.fee.model,
+                            com.example.university.fee.service,
+                            com.example.university.course.model,
+                            com.example.university.course.service,
                             jakarta.ws.rs;version="[3.0,4)",
-                            org.osgi.framework;version="[1.10,2)"
+                            jakarta.persistence;version="[3.1,4)",
+                            org.osgi.framework;version="[1.10,2)",
+                            org.osgi.service.component;version="[1.4,2)",
+                            org.slf4j;version="[1.7,2)",
+                            *
                         </Import-Package>
                         <Service-Component>OSGI-INF/*.xml</Service-Component>
                     </instructions>

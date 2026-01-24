@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,7 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (entityManager == null) {
             logger.warn("EntityManager not available - payment not persisted. Student: {}, Amount: {}", 
                 payment.getStudentId(), payment.getAmount());
-            return payment; // Return without persisting
+            return payment;
         }
         entityManager.persist(payment);
         entityManager.flush();
