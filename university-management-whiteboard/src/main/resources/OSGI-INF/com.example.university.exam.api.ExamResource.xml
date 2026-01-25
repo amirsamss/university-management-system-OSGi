@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" 
+name="com.example.university.exam.api.ExamResource">
+   <implementation class="com.example.university.exam.api.ExamResource"/>
+   <service>
+      <provide interface="java.lang.Object"/>
+   </service>
+   <property name="service.exported.interfaces" value="*"/>
+   <property name="service.exported.configs" value="org.apache.cxf.rs"/>
+   <property name="cxf.jaxrs.address" value="/api/exam"/>
+   <reference bind="setGradingService" 
+   interface="com.example.university.exam.service.GradingService" 
+   name="GradingService" 
+   policy="static" 
+   cardinality="0..1"/>
+</scr:component>

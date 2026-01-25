@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" 
+name="com.example.university.course.api.CourseResource">
+   <implementation class="com.example.university.course.api.CourseResource"/>
+   <service>
+      <provide interface="java.lang.Object"/>
+   </service>
+   <property name="service.exported.interfaces" value="*"/>
+   <property name="service.exported.configs" value="org.apache.cxf.rs"/>
+   <property name="cxf.jaxrs.address" value="/api/courses"/>
+   <reference bind="setCourseService" 
+   interface="com.example.university.course.service.CourseService" 
+   name="CourseService" 
+   policy="static" 
+   cardinality="0..1"/>
+</scr:component>

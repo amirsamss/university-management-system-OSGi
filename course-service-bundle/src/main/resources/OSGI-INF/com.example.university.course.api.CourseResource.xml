@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.4.0"
+    name="CourseResource"
+    activate="activate"
+    deactivate="deactivate">
+    <implementation class="com.example.university.course.api.CourseResource"/>
+    <service>
+        <provide interface="com.example.university.course.api.CourseResource"/>
+    </service>
+    <property name="osgi.jaxrs.resource" type="Boolean" value="true"/>
+    <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=default)"/>
+    <reference bind="setCourseService" name="courseService"
+        interface="com.example.university.course.service.CourseService"
+        cardinality="1..1" policy="static" unbind="unsetCourseService"/>
+</scr:component>

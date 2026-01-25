@@ -5,8 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * AccountStatement Entity - Student ledger/transaction history
- * UC-29: View Account Statements
+ * Account Statement Entity
  */
 @Entity
 @Table(name = "account_statements")

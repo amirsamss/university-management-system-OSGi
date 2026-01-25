@@ -7,8 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Payment Entity - Records payments made by students
- * UC-27: Track Payments & Outstanding Fees
+ * Payment Entity
  */
 @Entity
 @Table(name = "payments")
@@ -70,7 +69,6 @@ public class Payment implements Serializable {
         updatedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Invoice getInvoice() { return invoice; }

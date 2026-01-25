@@ -33,7 +33,7 @@ This builds:
 CREATE DATABASE university_management_db;
 ```
 
-**Option B: Supabase (Recommended for Teams)**
+**Option B: Supabase**
 - Create a new project in Supabase
 - Note your connection string (e.g., `postgresql://user:pass@host:5432/dbname`)
 - **For team setup, see [SUPABASE_SETUP.md](SUPABASE_SETUP.md)**
@@ -67,7 +67,7 @@ feature:install pax-jdbc-postgresql pax-jdbc-config
 # Configure database connection
 # For Local PostgreSQL:
 config:edit org.ops4j.datasource-university
-config:property-set osgi.jdbc.driver.name "PostgreSQL JDBC Driver"
+config:property-set osgi.jdbc.driver.name PostgreSQL
 config:property-set url jdbc:postgresql://localhost:5432/university_management_db
 config:property-set user postgres
 config:property-set password your_password
@@ -76,7 +76,7 @@ config:update
 
 # For Supabase (replace with your connection details):
 config:edit org.ops4j.datasource-university
-config:property-set osgi.jdbc.driver.name "PostgreSQL JDBC Driver"
+config:property-set osgi.jdbc.driver.name PostgreSQL
 config:property-set url jdbc:postgresql://your-project.supabase.co:5432/postgres
 config:property-set user postgres
 config:property-set password your_supabase_password
