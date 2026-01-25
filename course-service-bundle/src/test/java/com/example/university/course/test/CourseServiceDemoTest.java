@@ -14,6 +14,10 @@ import java.util.List;
 
 /**
  * Demonstration Test for Course Service Bundle - UC5-8
+ * UC5: Manage Course Catalog
+ * UC6: Validate Prerequisite Course
+ * UC7: Assign course to Lecturers
+ * UC8: Retrieve Course Schedule/Rooms
  * This test demonstrates all use cases without requiring a running Karaf instance
  */
 @DisplayName("Course Service Bundle - UC5-8 Functionality Demo")
@@ -32,7 +36,7 @@ public class CourseServiceDemoTest {
         prerequisites = new ArrayList<>();
     }
 
-    // ===== UC5: View and Configure Course Information =====
+    // ===== UC5: Manage Course Catalog =====
     @Test
     @DisplayName("UC5.1 - Create a new course")
     public void testCreateCourse() {
@@ -133,192 +137,9 @@ public class CourseServiceDemoTest {
         System.out.println("[UC5.4] ✓ Course updated: max capacity changed to 60");
     }
 
-    // ===== UC6: Manage Course Enrollment =====
+    // ===== UC6: Validate Prerequisite Course =====
     @Test
-    @DisplayName("UC6.1 - Enroll a student in a course")
-    public void testEnrollStudent() {
-        // Arrange
-        CourseEnrollment enrollment = new CourseEnrollment();
-        enrollment.setId(1L);
-        enrollment.setCourseId(1L);
-        enrollment.setStudentId("STU001");
-        enrollment.setStudentName("John Smith");
-        enrollment.setEnrollmentStatus(CourseEnrollment.EnrollmentStatus.PENDING);
-        enrollment.setSemester("Spring 2024");
-        enrollment.setAcademicYear("2023-2024");
-
-        // Act
-        enrollments.add(enrollment);
-
-        // Assert
-        assertEquals(1, enrollments.size());
-        assertEquals("STU001", enrollment.getStudentId());
-        System.out.println("[UC6.1] ✓ Student STU001 enrolled in course 1");
-    }
-
-    @Test
-    @DisplayName("UC6.2 - Approve student enrollment")
-    public void testApproveEnrollment() {
-        // Arrange
-        CourseEnrollment enrollment = new CourseEnrollment();
-        enrollment.setId(1L);
-        enrollment.setStudentId("STU001");
-        enrollment.setEnrollmentStatus(CourseEnrollment.EnrollmentStatus.PENDING);
-        enrollments.add(enrollment);
-
-        // Act
-        enrollment.setEnrollmentStatus(CourseEnrollment.EnrollmentStatus.ENROLLED);
-        enrollment.setApprovedBy("ADMIN001");
-
-        // Assert
-        assertEquals(CourseEnrollment.EnrollmentStatus.ENROLLED, enrollment.getEnrollmentStatus());
-        assertEquals("ADMIN001", enrollment.getApprovedBy());
-        System.out.println("[UC6.2] ✓ Enrollment for STU001 approved by ADMIN001");
-    }
-
-    @Test
-    @DisplayName("UC6.3 - Get student enrollments")
-    public void testGetStudentEnrollments() {
-        // Arrange
-        CourseEnrollment e1 = new CourseEnrollment();
-        e1.setId(1L);
-        e1.setStudentId("STU001");
-        e1.setCourseId(1L);
-        enrollments.add(e1);
-
-        CourseEnrollment e2 = new CourseEnrollment();
-        e2.setId(2L);
-        e2.setStudentId("STU001");
-        e2.setCourseId(2L);
-        enrollments.add(e2);
-
-        // Act
-        List<CourseEnrollment> studentEnrollments = enrollments.stream()
-            .filter(e -> e.getStudentId().equals("STU001"))
-            .toList();
-
-        // Assert
-        assertEquals(2, studentEnrollments.size());
-        System.out.println("[UC6.3] ✓ Student STU001 has " + studentEnrollments.size() + " enrollments");
-    }
-
-    @Test
-    @DisplayName("UC6.4 - Drop a course")
-    public void testDropCourse() {
-        // Arrange
-        CourseEnrollment enrollment = new CourseEnrollment();
-        enrollment.setId(1L);
-        enrollment.setStudentId("STU001");
-        enrollment.setEnrollmentStatus(CourseEnrollment.EnrollmentStatus.ENROLLED);
-        enrollments.add(enrollment);
-
-        // Act
-        enrollment.setEnrollmentStatus(CourseEnrollment.EnrollmentStatus.DROPPED);
-
-        // Assert
-        assertEquals(CourseEnrollment.EnrollmentStatus.DROPPED, enrollment.getEnrollmentStatus());
-        System.out.println("[UC6.4] ✓ Course dropped for student STU001");
-    }
-
-    // ===== UC7: Set Course Timetable =====
-    @Test
-    @DisplayName("UC7.1 - Add course schedule")
-    public void testAddSchedule() {
-        // Arrange
-        CourseSchedule schedule = new CourseSchedule();
-        schedule.setId(1L);
-        schedule.setCourseId(1L);
-        schedule.setCourseCode("CS101");
-        schedule.setDayOfWeek("MONDAY");
-        schedule.setStartTime(LocalTime.of(9, 0));
-        schedule.setEndTime(LocalTime.of(10, 30));
-        schedule.setVenue("Engineering Building");
-        schedule.setRoomNumber("205");
-        schedule.setCapacity(50);
-        schedule.setScheduleType("LECTURE");
-
-        // Act
-        schedules.add(schedule);
-
-        // Assert
-        assertEquals(1, schedules.size());
-        assertEquals("MONDAY", schedule.getDayOfWeek());
-        System.out.println("[UC7.1] ✓ Schedule added: Monday 09:00-10:30 in Engineering Building 205");
-    }
-
-    @Test
-    @DisplayName("UC7.2 - Get schedules for a course")
-    public void testGetCourseSchedules() {
-        // Arrange
-        CourseSchedule s1 = new CourseSchedule();
-        s1.setId(1L);
-        s1.setCourseId(1L);
-        s1.setDayOfWeek("MONDAY");
-        schedules.add(s1);
-
-        CourseSchedule s2 = new CourseSchedule();
-        s2.setId(2L);
-        s2.setCourseId(1L);
-        s2.setDayOfWeek("WEDNESDAY");
-        schedules.add(s2);
-
-        // Act
-        List<CourseSchedule> courseSchedules = schedules.stream()
-            .filter(s -> s.getCourseId().equals(1L))
-            .toList();
-
-        // Assert
-        assertEquals(2, courseSchedules.size());
-        System.out.println("[UC7.2] ✓ Found " + courseSchedules.size() + " schedules for course 1");
-    }
-
-    @Test
-    @DisplayName("UC7.3 - Get schedules by instructor")
-    public void testGetInstructorSchedules() {
-        // Arrange
-        CourseSchedule s1 = new CourseSchedule();
-        s1.setId(1L);
-        s1.setInstructorId("INSTR001");
-        s1.setCourseCode("CS101");
-        schedules.add(s1);
-
-        CourseSchedule s2 = new CourseSchedule();
-        s2.setId(2L);
-        s2.setInstructorId("INSTR001");
-        s2.setCourseCode("CS102");
-        schedules.add(s2);
-
-        // Act
-        List<CourseSchedule> instrSchedules = schedules.stream()
-            .filter(s -> s.getInstructorId().equals("INSTR001"))
-            .toList();
-
-        // Assert
-        assertEquals(2, instrSchedules.size());
-        System.out.println("[UC7.3] ✓ Instructor INSTR001 has " + instrSchedules.size() + " schedules");
-    }
-
-    @Test
-    @DisplayName("UC7.4 - Update schedule")
-    public void testUpdateSchedule() {
-        // Arrange
-        CourseSchedule schedule = new CourseSchedule();
-        schedule.setId(1L);
-        schedule.setDayOfWeek("MONDAY");
-        schedule.setStartTime(LocalTime.of(9, 0));
-        schedules.add(schedule);
-
-        // Act
-        schedule.setStartTime(LocalTime.of(10, 0));
-
-        // Assert
-        assertEquals(LocalTime.of(10, 0), schedule.getStartTime());
-        System.out.println("[UC7.4] ✓ Schedule updated: start time changed to 10:00");
-    }
-
-    // ===== UC8: Check Course Prerequisites =====
-    @Test
-    @DisplayName("UC8.1 - Add course prerequisites")
+    @DisplayName("UC6.1 - Add course prerequisites")
     public void testAddPrerequisite() {
         // Arrange
         CoursePrerequisite prerequisite = new CoursePrerequisite();
@@ -336,11 +157,11 @@ public class CourseServiceDemoTest {
         // Assert
         assertEquals(1, prerequisites.size());
         assertTrue(prerequisite.getIsMandatory());
-        System.out.println("[UC8.1] ✓ Prerequisite added: MATH101 for CS101 (mandatory)");
+        System.out.println("[UC6.1] ✓ Prerequisite added: MATH101 for CS101 (mandatory)");
     }
 
     @Test
-    @DisplayName("UC8.2 - Get prerequisites for a course")
+    @DisplayName("UC6.2 - Get prerequisites for a course")
     public void testGetCoursePrerequisites() {
         // Arrange
         CoursePrerequisite p1 = new CoursePrerequisite();
@@ -362,11 +183,11 @@ public class CourseServiceDemoTest {
 
         // Assert
         assertEquals(2, coursePrereqs.size());
-        System.out.println("[UC8.2] ✓ Course 1 has " + coursePrereqs.size() + " prerequisites");
+        System.out.println("[UC6.2] ✓ Course 1 has " + coursePrereqs.size() + " prerequisites");
     }
 
     @Test
-    @DisplayName("UC8.3 - Validate student prerequisites (met)")
+    @DisplayName("UC6.3 - Validate student prerequisites (met)")
     public void testValidatePrerequisitesMet() {
         // Arrange - Student has completed prerequisites
         CoursePrerequisite prereq = new CoursePrerequisite();
@@ -393,11 +214,11 @@ public class CourseServiceDemoTest {
 
         // Assert
         assertTrue(isValid);
-        System.out.println("[UC8.3] ✓ Student STU001 meets all prerequisites for course 1");
+        System.out.println("[UC6.3] ✓ Student STU001 meets all prerequisites for course 1");
     }
 
     @Test
-    @DisplayName("UC8.4 - Validate student prerequisites (not met)")
+    @DisplayName("UC6.4 - Validate student prerequisites (not met)")
     public void testValidatePrerequisitesNotMet() {
         // Arrange - Student has NOT completed prerequisites
         CoursePrerequisite prereq = new CoursePrerequisite();
@@ -417,7 +238,214 @@ public class CourseServiceDemoTest {
 
         // Assert
         assertEquals(1, failedPrereqs.size());
-        System.out.println("[UC8.4] ✓ Student STU001 has NOT met " + failedPrereqs.size() + " prerequisite(s): " + failedPrereqs);
+        System.out.println("[UC6.4] ✓ Student STU001 has NOT met " + failedPrereqs.size() + " prerequisite(s): " + failedPrereqs);
+    }
+
+    // ===== UC7: Assign course to Lecturers =====
+    @Test
+    @DisplayName("UC7.1 - Assign lecturer to course")
+    public void testAssignLecturerToCourse() {
+        // Arrange
+        Course course = new Course();
+        course.setId(1L);
+        course.setCourseCode("CS101");
+        course.setCourseName("Introduction to Computer Science");
+        course.setInstructorName(null);
+        courses.add(course);
+
+        // Act
+        course.setInstructorName("Dr. Sarah Johnson");
+
+        // Assert
+        assertEquals("Dr. Sarah Johnson", course.getInstructorName());
+        System.out.println("[UC7.1] ✓ Lecturer 'Dr. Sarah Johnson' assigned to course CS101");
+    }
+
+    @Test
+    @DisplayName("UC7.2 - Get courses assigned to lecturer")
+    public void testGetCoursesForLecturer() {
+        // Arrange
+        Course c1 = new Course();
+        c1.setId(1L);
+        c1.setCourseCode("CS101");
+        c1.setInstructorName("Dr. Sarah Johnson");
+        courses.add(c1);
+
+        Course c2 = new Course();
+        c2.setId(2L);
+        c2.setCourseCode("CS102");
+        c2.setInstructorName("Dr. Sarah Johnson");
+        courses.add(c2);
+
+        Course c3 = new Course();
+        c3.setId(3L);
+        c3.setCourseCode("CS103");
+        c3.setInstructorName("Dr. John Smith");
+        courses.add(c3);
+
+        // Act
+        List<Course> lecturerCourses = courses.stream()
+            .filter(c -> "Dr. Sarah Johnson".equals(c.getInstructorName()))
+            .toList();
+
+        // Assert
+        assertEquals(2, lecturerCourses.size());
+        System.out.println("[UC7.2] ✓ Dr. Sarah Johnson is assigned to " + lecturerCourses.size() + " courses");
+    }
+
+    @Test
+    @DisplayName("UC7.3 - Update lecturer assignment")
+    public void testUpdateLecturerAssignment() {
+        // Arrange
+        Course course = new Course();
+        course.setId(1L);
+        course.setCourseCode("CS101");
+        course.setInstructorName("Dr. Sarah Johnson");
+        courses.add(course);
+
+        // Act
+        course.setInstructorName("Dr. Michael Brown");
+
+        // Assert
+        assertEquals("Dr. Michael Brown", course.getInstructorName());
+        System.out.println("[UC7.3] ✓ Course CS101 reassigned to Dr. Michael Brown");
+    }
+
+    @Test
+    @DisplayName("UC7.4 - Remove lecturer assignment")
+    public void testRemoveLecturerAssignment() {
+        // Arrange
+        Course course = new Course();
+        course.setId(1L);
+        course.setCourseCode("CS101");
+        course.setInstructorName("Dr. Sarah Johnson");
+        courses.add(course);
+
+        // Act
+        course.setInstructorName(null);
+
+        // Assert
+        assertNull(course.getInstructorName());
+        System.out.println("[UC7.4] ✓ Lecturer removed from course CS101");
+    }
+
+    // ===== UC8: Retrieve Course Schedule/Rooms =====
+    @Test
+    @DisplayName("UC8.1 - Add course schedule with room")
+    public void testAddSchedule() {
+        // Arrange
+        CourseSchedule schedule = new CourseSchedule();
+        schedule.setId(1L);
+        schedule.setCourseId(1L);
+        schedule.setCourseCode("CS101");
+        schedule.setDayOfWeek("MONDAY");
+        schedule.setStartTime(LocalTime.of(9, 0));
+        schedule.setEndTime(LocalTime.of(10, 30));
+        schedule.setVenue("Engineering Building");
+        schedule.setRoomNumber("205");
+        schedule.setCapacity(50);
+        schedule.setScheduleType("LECTURE");
+
+        // Act
+        schedules.add(schedule);
+
+        // Assert
+        assertEquals(1, schedules.size());
+        assertEquals("MONDAY", schedule.getDayOfWeek());
+        System.out.println("[UC8.1] ✓ Schedule added: Monday 09:00-10:30 in Engineering Building 205");
+    }
+
+    @Test
+    @DisplayName("UC8.2 - Get schedules for a course")
+    public void testGetCourseSchedules() {
+        // Arrange
+        CourseSchedule s1 = new CourseSchedule();
+        s1.setId(1L);
+        s1.setCourseId(1L);
+        s1.setDayOfWeek("MONDAY");
+        schedules.add(s1);
+
+        CourseSchedule s2 = new CourseSchedule();
+        s2.setId(2L);
+        s2.setCourseId(1L);
+        s2.setDayOfWeek("WEDNESDAY");
+        schedules.add(s2);
+
+        // Act
+        List<CourseSchedule> courseSchedules = schedules.stream()
+            .filter(s -> s.getCourseId().equals(1L))
+            .toList();
+
+        // Assert
+        assertEquals(2, courseSchedules.size());
+        System.out.println("[UC8.2] ✓ Found " + courseSchedules.size() + " schedules for course 1");
+    }
+
+    @Test
+    @DisplayName("UC8.3 - Get room availability")
+    public void testGetRoomAvailability() {
+        // Arrange
+        CourseSchedule s1 = new CourseSchedule();
+        s1.setId(1L);
+        s1.setVenue("Engineering Building");
+        s1.setRoomNumber("205");
+        s1.setDayOfWeek("MONDAY");
+        s1.setStartTime(LocalTime.of(9, 0));
+        s1.setEndTime(LocalTime.of(10, 30));
+        schedules.add(s1);
+
+        CourseSchedule s2 = new CourseSchedule();
+        s2.setId(2L);
+        s2.setVenue("Engineering Building");
+        s2.setRoomNumber("205");
+        s2.setDayOfWeek("MONDAY");
+        s2.setStartTime(LocalTime.of(11, 0));
+        s2.setEndTime(LocalTime.of(12, 30));
+        schedules.add(s2);
+
+        // Act
+        List<CourseSchedule> roomSchedules = schedules.stream()
+            .filter(s -> "Engineering Building".equals(s.getVenue()) && "205".equals(s.getRoomNumber()))
+            .toList();
+
+        // Assert
+        assertEquals(2, roomSchedules.size());
+        System.out.println("[UC8.3] ✓ Room Engineering Building 205 has " + roomSchedules.size() + " scheduled sessions");
+    }
+
+    @Test
+    @DisplayName("UC8.4 - Get schedules by day and time")
+    public void testGetSchedulesByDayAndTime() {
+        // Arrange
+        CourseSchedule s1 = new CourseSchedule();
+        s1.setId(1L);
+        s1.setDayOfWeek("MONDAY");
+        s1.setStartTime(LocalTime.of(9, 0));
+        s1.setCourseCode("CS101");
+        schedules.add(s1);
+
+        CourseSchedule s2 = new CourseSchedule();
+        s2.setId(2L);
+        s2.setDayOfWeek("MONDAY");
+        s2.setStartTime(LocalTime.of(11, 0));
+        s2.setCourseCode("CS102");
+        schedules.add(s2);
+
+        CourseSchedule s3 = new CourseSchedule();
+        s3.setId(3L);
+        s3.setDayOfWeek("TUESDAY");
+        s3.setStartTime(LocalTime.of(9, 0));
+        s3.setCourseCode("CS103");
+        schedules.add(s3);
+
+        // Act
+        List<CourseSchedule> mondaySchedules = schedules.stream()
+            .filter(s -> "MONDAY".equals(s.getDayOfWeek()))
+            .toList();
+
+        // Assert
+        assertEquals(2, mondaySchedules.size());
+        System.out.println("[UC8.4] ✓ Found " + mondaySchedules.size() + " schedules on MONDAY");
     }
 
     // Summary test
@@ -430,16 +458,16 @@ public class CourseServiceDemoTest {
         System.out.println("========================================");
         System.out.println("");
         System.out.println("All use cases have been demonstrated:");
-        System.out.println("  [OK] UC5 - View and Configure Course Information");
-        System.out.println("  [OK] UC6 - Manage Course Enrollment");
-        System.out.println("  [OK] UC7 - Set Course Timetable");
-        System.out.println("  [OK] UC8 - Check Course Prerequisites");
+        System.out.println("  [OK] UC5 - Manage Course Catalog");
+        System.out.println("  [OK] UC6 - Validate Prerequisite Course");
+        System.out.println("  [OK] UC7 - Assign course to Lecturers");
+        System.out.println("  [OK] UC8 - Retrieve Course Schedule/Rooms");
         System.out.println("");
         System.out.println("Features demonstrated:");
-        System.out.println("  • Create and manage courses");
-        System.out.println("  • Enroll students and manage enrollments");
-        System.out.println("  • Set and manage course schedules");
-        System.out.println("  • Define and validate prerequisites");
+        System.out.println("  • Create and manage course catalog");
+        System.out.println("  • Define and validate course prerequisites");
+        System.out.println("  • Assign and manage lecturer assignments");
+        System.out.println("  • Retrieve and manage course schedules and rooms");
         System.out.println("========================================");
     }
 }
