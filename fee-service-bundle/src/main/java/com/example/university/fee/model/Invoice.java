@@ -46,6 +46,9 @@ public class Invoice implements Serializable {
     @Column(name = "other_charges", precision = 10, scale = 2)
     private BigDecimal otherCharges = BigDecimal.ZERO;
 
+    @Column(name = "late_fee_amount", precision = 10, scale = 2)
+    private BigDecimal lateFeeAmount = BigDecimal.ZERO;
+
     @Column(name = "financial_aid_amount", precision = 10, scale = 2)
     private BigDecimal financialAidAmount = BigDecimal.ZERO;
 
@@ -91,20 +94,82 @@ public class Invoice implements Serializable {
     }
 
     public void calculateOutstandingBalance() {
-        this.outstandingBalance = this.totalAmount.subtract(this.amountPaid).subtract(this.financialAidAmount);
-        if (this.outstandingBalance.compareTo(BigDecimal.ZERO) < 0) {
+        // Outstanding balance = Total + Late Fees - Amount Paid - Financial Aid
+        // Handle null values safely
+        BigDecimal total = this.totalAmount != null ? this.totalAmount : BigDecimal.ZERO;
+        BigDecimal lateFees = this.lateFeeAmount != null ? this.lateFeeAmount : BigDecimal.ZERO;
+        BigDecimal paid = this.amountPaid != null ? this.amountPaid : BigDecimal.ZERO;
+        BigDecimal financialAid = this.financialAidAmount != null ? this.financialAidAmount : BigDecimal.ZERO;
+        
+        BigDecimal totalWithLateFees = total.add(lateFees);
+        this.outstandingBalance = totalWithLateFees.subtract(paid).subtract(financialAid);
+        if (this.outstandingBalance == null || this.outstandingBalance.compareTo(BigDecimal.ZERO) < 0) {
             this.outstandingBalance = BigDecimal.ZERO;
         }
         updateStatus();
     }
+    
+    /**
+     * Calculate and apply late fees for overdue invoices
+     * @param lateFeeRate Rate per day (e.g., 0.01 for 1% per day)
+     * @return The late fee amount calculated
+     */
+    public BigDecimal calculateAndApplyLateFee(BigDecimal lateFeeRate) {
+        if (this.dueDate == null || this.outstandingBalance.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        }
+        
+        LocalDate today = LocalDate.now();
+        if (!today.isAfter(this.dueDate)) {
+            return BigDecimal.ZERO; // Not overdue yet
+        }
+        
+        // Calculate days overdue
+        long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(this.dueDate, today);
+        if (daysOverdue <= 0) {
+            return BigDecimal.ZERO;
+        }
+        
+        // Calculate late fee: (Outstanding Balance * Rate * Days Overdue)
+        // Cap at 100% of original invoice amount
+        BigDecimal baseAmount = this.totalAmount.subtract(this.amountPaid).subtract(this.financialAidAmount);
+        if (baseAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        }
+        
+        BigDecimal calculatedLateFee = baseAmount.multiply(lateFeeRate).multiply(BigDecimal.valueOf(daysOverdue));
+        BigDecimal maxLateFee = this.totalAmount; // Cap at 100% of original amount
+        
+        BigDecimal newLateFee = calculatedLateFee.min(maxLateFee);
+        
+        // Only add the difference if late fee increased
+        BigDecimal lateFeeIncrease = newLateFee.subtract(this.lateFeeAmount);
+        if (lateFeeIncrease.compareTo(BigDecimal.ZERO) > 0) {
+            this.lateFeeAmount = newLateFee;
+            calculateOutstandingBalance();
+        }
+        
+        return lateFeeIncrease;
+    }
 
     private void updateStatus() {
         if (this.outstandingBalance.compareTo(BigDecimal.ZERO) == 0) {
-            this.status = InvoiceStatus.PAID;
+            if (this.status == InvoiceStatus.SETTLED) {
+                this.status = InvoiceStatus.SETTLED;
+            } else {
+                this.status = InvoiceStatus.PAID;
+            }
         } else if (this.amountPaid.compareTo(BigDecimal.ZERO) > 0) {
-            this.status = InvoiceStatus.PARTIALLY_PAID;
+            // Partially paid
+            if (this.dueDate != null && LocalDate.now().isAfter(this.dueDate)) {
+                this.status = InvoiceStatus.OVERDUE;
+            } else {
+                this.status = InvoiceStatus.PARTIALLY_PAID;
+            }
         } else if (this.dueDate != null && LocalDate.now().isAfter(this.dueDate)) {
             this.status = InvoiceStatus.OVERDUE;
+        } else {
+            this.status = InvoiceStatus.UNPAID;
         }
     }
 
@@ -114,11 +179,23 @@ public class Invoice implements Serializable {
     }
 
     public void recordPayment(BigDecimal amount) {
+        if (amount == null) {
+            return;
+        }
+        if (this.amountPaid == null) {
+            this.amountPaid = BigDecimal.ZERO;
+        }
         this.amountPaid = this.amountPaid.add(amount);
         calculateOutstandingBalance();
     }
 
     public void applyFinancialAid(BigDecimal amount) {
+        if (amount == null) {
+            return;
+        }
+        if (this.financialAidAmount == null) {
+            this.financialAidAmount = BigDecimal.ZERO;
+        }
         this.financialAidAmount = this.financialAidAmount.add(amount);
         calculateOutstandingBalance();
     }
@@ -142,6 +219,8 @@ public class Invoice implements Serializable {
     public void setFixedFeesAmount(BigDecimal fixedFeesAmount) { this.fixedFeesAmount = fixedFeesAmount; }
     public BigDecimal getOtherCharges() { return otherCharges; }
     public void setOtherCharges(BigDecimal otherCharges) { this.otherCharges = otherCharges; }
+    public BigDecimal getLateFeeAmount() { return lateFeeAmount; }
+    public void setLateFeeAmount(BigDecimal lateFeeAmount) { this.lateFeeAmount = lateFeeAmount; }
     public BigDecimal getFinancialAidAmount() { return financialAidAmount; }
     public void setFinancialAidAmount(BigDecimal financialAidAmount) { this.financialAidAmount = financialAidAmount; }
     public BigDecimal getTotalAmount() { return totalAmount; }

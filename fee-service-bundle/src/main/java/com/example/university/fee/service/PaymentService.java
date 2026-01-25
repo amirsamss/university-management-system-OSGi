@@ -44,4 +44,9 @@ public interface PaymentService {
      * Reverse a payment
      */
     Payment reversePayment(Long id, String reason);
+
+    /**
+     * Get outstanding fees report
+     */
+    List<Object[]> getOutstandingFeesReport();
 }

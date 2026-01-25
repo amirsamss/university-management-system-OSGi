@@ -4,33 +4,37 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
              https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-    <persistence-unit name="fee-service-pu" transaction-type="JTA">
-        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=universityDS)</jta-data-source>
+    
+    <persistence-unit name="fee-service-pu" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         
-        <!-- Entity Classes -->
-        <class>com.example.university.fee.model.Payment</class>
-        <class>com.example.university.fee.model.Invoice</class>
-        <class>com.example.university.fee.model.InvoiceLineItem</class>
         <class>com.example.university.fee.model.FeeStructure</class>
         <class>com.example.university.fee.model.FeeItem</class>
+        <class>com.example.university.fee.model.Invoice</class>
+        <class>com.example.university.fee.model.InvoiceLineItem</class>
+        <class>com.example.university.fee.model.Payment</class>
         <class>com.example.university.fee.model.FinancialAid</class>
-        <class>com.example.university.fee.model.AccountStatement</class>
         <class>com.example.university.fee.model.Refund</class>
+        <class>com.example.university.fee.model.AccountStatement</class>
         
         <properties>
-            <!-- Database Schema Generation -->
-            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+            <!-- Database Connection - Supabase -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres.yopvpvgbgajkwadxevda"/>
+            <property name="jakarta.persistence.jdbc.password" value="WIF_3006_G2"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             
             <!-- Hibernate Properties -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
-            
-            <!-- Connection Pool -->
-            <property name="hibernate.connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider"/>
-            <property name="hibernate.c3p0.min_size" value="5"/>
-            <property name="hibernate.c3p0.max_size" value="20"/>
-            <property name="hibernate.c3p0.timeout" value="300"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+            <property name="hibernate.connection.pool_size" value="5"/>
+            <property name="hibernate.connection.autocommit" value="false"/>
+            <!-- Suppress connection and transaction logs -->
+            <property name="hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS" value="-1"/>
+            <property name="hibernate.jdbc.log.warnings" value="false"/>
+            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>

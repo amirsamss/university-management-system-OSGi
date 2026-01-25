@@ -67,32 +67,63 @@ university-management-system-OSGi/
 
 2. **Build the bundle**:
    ```bash
+   cd fee-service-bundle
    mvn clean install
    ```
 
-3. **Install in Karaf**:
+3. **Deploy to Karaf** (see [fee-service-bundle/KARAF_DEPLOYMENT.md](fee-service-bundle/KARAF_DEPLOYMENT.md)):
    ```bash
+   # In Karaf console:
+   feature:install shell jpa transaction jdbc
    bundle:install file:///path/to/fee-service-bundle-1.0.0-SNAPSHOT.jar
    bundle:start <bundle-id>
    ```
 
-4. **Access REST API**:
+4. **Use Karaf Shell Commands**:
    ```bash
-   curl http://localhost:8181/api/payments
+   # In Karaf console:
+   fee:menu                    # Interactive menu
+   fee:help                    # List all commands
+   fee:create-fee-structure   # Create fee structure
+   fee:generate-invoice       # Generate invoice
    ```
 
-For detailed installation instructions, see [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md).
+For detailed deployment instructions, see [fee-service-bundle/KARAF_DEPLOYMENT.md](fee-service-bundle/KARAF_DEPLOYMENT.md).
 
-## API Endpoints
+## Karaf Shell Commands
+
+The bundle provides **17 Karaf Shell Commands** for fee management:
+
+### Fee Structure Management (UC-23)
+- `fee:create-fee-structure` - Create fee structure
+- `fee:list-fee-structures` - List all fee structures
+- `fee:view-fee-structure` - View fee structure details
+- `fee:add-fee-item` - Add fee item to structure
+
+### Invoice & Tuition (UC-24, UC-25)
+- `fee:generate-invoice` - Generate invoice for student
+- `fee:generate-invoices-batch` - Batch invoice generation
+- `fee:calculate-tuition` - Calculate tuition with breakdown
+
+### Financial Aid (UC-26)
+- `fee:manage-financial-aid` - Create/manage financial aid
 
 ### Payment Management (UC-27)
+- `fee:record-payment` - Record payment
+- `fee:view-payment` - View payment details
+- `fee:view-payments` - List payments
+- `fee:view-outstanding` - View outstanding fees
+- `fee:reverse-payment` - Reverse a payment
 
-- `POST /api/payments` - Record a payment
-- `GET /api/payments/{id}` - Get payment by ID
-- `GET /api/payments/student/{studentId}` - Get payments by student
-- `GET /api/payments/date-range?startDate=...&endDate=...` - Get payments by date range
+### Refunds & Statements (UC-28, UC-29)
+- `fee:process-refund` - Process refund
+- `fee:view-statement` - View account statement
+- `fee:view-all` - View all data
 
-Base URL: `http://localhost:8181` (default Karaf HTTP port)
+### Interactive Menu
+- `fee:menu` - Interactive menu with all options
+
+See [fee-service-bundle/KARAF_SHELL_COMMANDS_SUMMARY.md](fee-service-bundle/KARAF_SHELL_COMMANDS_SUMMARY.md) for complete command reference.
 
 ## Dependencies
 
@@ -135,7 +166,7 @@ Services are registered using OSGi Declarative Services (DS) annotations:
 
 1. Start Karaf and install the bundle
 2. Verify bundle status: `bundle:list | grep fee-service`
-3. Test REST endpoints using curl or Postman
+3. Test shell commands: `fee:menu` or `fee:help`
 4. Check logs: `log:tail`
 
 ## Troubleshooting
@@ -144,13 +175,11 @@ See [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md) for troubleshooting steps.
 
 ## Documentation
 
-<<<<<<< Updated upstream
-- [Installation Guide](INSTALLATION_GUIDE.md) - Detailed installation and configuration instructions
-=======
-- [Quick Start Guide](QUICKSTART.md) - Quick setup instructions for getting started
-- [Installation Guide](INSTALLATION_GUIDE.md) - Comprehensive installation and configuration instructions
-- [Supabase Setup Guide](SUPABASE_SETUP.md) - Team setup guide for Supabase PostgreSQL database
->>>>>>> Stashed changes
+### Fee Service Bundle
+- **[KARAF_DEPLOYMENT.md](fee-service-bundle/KARAF_DEPLOYMENT.md)** - Complete Karaf deployment guide
+- **[KARAF_SHELL_COMMANDS_SUMMARY.md](fee-service-bundle/KARAF_SHELL_COMMANDS_SUMMARY.md)** - All shell commands reference
+- **[KARAF_SHELL_USAGE.md](fee-service-bundle/KARAF_SHELL_USAGE.md)** - Detailed usage guide
+- **[README_OSGI.md](fee-service-bundle/README_OSGI.md)** - OSGi deployment overview
 
 ## License
 

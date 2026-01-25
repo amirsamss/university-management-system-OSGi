@@ -15,8 +15,8 @@ public class FeeItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fee_structure_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {})
+    @JoinColumn(name = "fee_structure_id", nullable = false, insertable = true, updatable = true)
     private FeeStructure feeStructure;
 
     @Column(name = "name", nullable = false)
