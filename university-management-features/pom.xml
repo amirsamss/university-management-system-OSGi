@@ -12,10 +12,25 @@
     </parent>
 
     <artifactId>university-management-features</artifactId>
-    <packaging>feature</packaging>
+    <packaging>pom</packaging>
 
     <name>University Management Features</name>
     <description>Karaf feature repository for university management system</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.example.university</groupId>
+            <artifactId>university-management-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.example.university</groupId>
+            <artifactId>university-management-whiteboard</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        
+    </dependencies>
 
     <build>
         <plugins>
@@ -23,7 +38,47 @@
                 <groupId>org.apache.karaf.tooling</groupId>
                 <artifactId>karaf-maven-plugin</artifactId>
                 <version>${karaf.version}</version>
-                <extensions>true</extensions>
+                <configuration>
+                    <excludedArtifactIds>
+                        <excludedArtifactId>osgi.core</excludedArtifactId>
+                        <excludedArtifactId>org.osgi.core</excludedArtifactId>
+                        <excludedArtifactId>slf4j-api</excludedArtifactId>
+                        <excludedArtifactId>slf4j.api</excludedArtifactId>
+                    </excludedArtifactIds>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-features-file</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>features-generate-descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>target/feature/feature.xml</file>
+                                    <type>xml</type>
+                                    <classifier>features</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
